@@ -59,12 +59,9 @@ io.on('connection', socket => {
     });
 
     // Video chat
-    socket.on('video-chat', (roomId, userId, username)=>{
+    socket.on('video-chat', (roomId, userId)=>{
         socket.join(roomId);
         socket.broadcast.to(roomId).emit("user-connected", userId);
-        socket.on("message", (message) => {
-            io.to(roomId).emit("createMessage", message, username);
-        });
     })
     
 

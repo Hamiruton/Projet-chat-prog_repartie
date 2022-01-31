@@ -24,46 +24,49 @@ showChat.addEventListener("click", () => {
 let peer = new Peer(undefined, {
     path: "/peerjs",
     host: "/",
-    port: '8000',
+    port: process.env.PORT || 8000,
 });
 
 navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: true,
-})
-.then((stream)=>{
-    myVideoStream = stream;
-    addVideoStream(myVideo, stream);
-    peer.on("call", (call)=>{
-        call.answer(stream);
-        const video = document.createElement("video");
-        call.on("stream", userVideoStream=>{
-            addVideoStream(video, userVideoStream);
-        });
-    });
-    socket.on("user-connected", userId=>{
-        connectToNewUser(userId, stream);
-    });
+  audio: true,
+  video: true,
+}).then(stream =>{
+  addVideoStream(myVideo, stream);
+
+  peer.on('call', call => {
+    call.answer(stream);
+    const video = document.createElement('video');
+    call.on('stream', userVideoStream => {
+      addVideoStream(video, userVideoStream);
+    })
+  })
+
+  socket.on('user-connected', userId => {
+    connectToNewUser(userId, stream);
+  });
 });
 
 const connectToNewUser = (userId, stream) => {
-    const call = peer.call(userId, stream);
-    const video = document.createElement("video");
-    call.on("stream", userVideoStream => {
-        addVideoStream(video, userVideoStream);
-    });
+  const call = peer.call(userId, stream);
+  const video = document.createElement("video");
+  call.on("stream", userVideoStream => {
+    addVideoStream(video, userVideoStream);
+  });
+  call.on('close', ()=>{
+    video.remove();
+  })
 };
 
-peer.on("open", id=> {
+peer.on("open", id => {
     socket.emit("video-chat", ROOM_ID, id);
 })
 
 const addVideoStream = (video, stream) =>{
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", ()=>{
-        video.play();
-        VideoGrid.append(video);
+      video.play();
     })
+    VideoGrid.append(video);
 };
 
 const inviteButton = document.querySelector("#inviteButton");
