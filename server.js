@@ -92,6 +92,6 @@ app.get('/room/:id', (req,res)=>{
     res.render('room.ejs', { roomId: req.params.id })
 })
 
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 server.listen(PORT, () => console.log(`Serveur lancé sur le port ${PORT}`));
