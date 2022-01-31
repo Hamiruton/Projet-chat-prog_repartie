@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+			integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="../css/style.css" />
+		<title>Chat App</title>
+	</head>
+	<body>
+		<div class="join-container">
+			<header class="join-header">
+				<h1>C H A T</h1>
+			</header>
+			<main class="join-main">
+				<form action="/chat" method="get">
+					<div class="form-control">
+						<label for="username">Nom d'utilisateur</label>
+						<input
+							type="text"
+							name="username"
+							id="username"
+							placeholder="Enter username..."
+							required
+						/>
+					</div>
+					<div class="form-control">
+						<label for="room">Salon de chat</label>
+						<select name="room" id="room">
+							<option value="Famille">Famille</option>
+							<option value="Amis">Amis</option>
+							<option value="Classe">Classe</option>
+						</select>
+					</div>
+					<button type="submit" class="btn">Rejoindre Chat</button>
+				</form>
+			</main>
+		</div>
+	</body>
+</html>
