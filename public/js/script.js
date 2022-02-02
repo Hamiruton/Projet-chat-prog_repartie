@@ -22,17 +22,12 @@ showChat.addEventListener("click", () => {
 });
 
 
-let peer = new Peer(undefined, {
-    path: "/peerjs",
-    host: "/root",
-    port: '`${process.env.PORT}`' || '8000',
-});
+let peer = new Peer();
 
 navigator.mediaDevices.getUserMedia({
     audio: true,
     video: true,
-})
-.then((stream)=>{
+}).then((stream)=>{
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
     peer.on("call", (call)=>{
@@ -63,9 +58,8 @@ const addVideoStream = (video, stream) =>{
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", ()=>{
         video.play();
-        
+        VideoGrid.append(video);
     })
-    VideoGrid.append(video);
 };
 
 
