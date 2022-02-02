@@ -24,8 +24,8 @@ showChat.addEventListener("click", () => {
 
 let peer = new Peer(undefined, {
     path: "/peerjs",
-    host: "/",
-    port: '8000',
+    host: "/root",
+    port: '`${process.env.PORT}`' || '8000',
 });
 
 navigator.mediaDevices.getUserMedia({
