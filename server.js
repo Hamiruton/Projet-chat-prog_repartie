@@ -29,6 +29,7 @@ app.get('/', (req, res)=>{
 app.get('/chat', (req, res)=>{
     res.render('chat.ejs')
 })
+
 io.on('connection', socket => {
     socket.on('joinRoom', ({username, room}) => {
         const user = userJoin(socket.id, username, room);
@@ -45,7 +46,26 @@ io.on('connection', socket => {
         
         // Renvoyer les infos d'un salon
         io.to(user.room).emit('roomUsers', {room: user.room, users: getRoomUsers(user.room)});
-        
+
+        /////////////////////////////////////////
+        //pour le paint recevoir le data et l'envoyer à tous les autres users (wayou) (chat_test.ejs) lien localhost: 8000/chat_test
+        socket.on('drawing',(data)=>{
+            socket.broadcast.to(user.room).emit('drawing',data)
+            io.to(socket.id).emit('drawing',data)
+        })
+    
+    
+        socket.on('clear',()=>{
+            socket.broadcast.to(user.room).emit('efface')
+        })
+
+        // paint real time 2e tuto adapte (draw.css/ draw.ejs) lien localhost: 8000/draw_page
+        socket.on('mouseDown', ([x, y]) => socket.broadcast.to(user.room).emit('mouseDown', [x, y]))
+        socket.on('mouseMove', ([x, y]) => socket.broadcast.to(user.room).emit('mouseMove', [x, y]))
+        socket.on('mouseUp', () => socket.broadcast.to(user.room).emit('mouseUp'))
+        socket.on('clear', () => socket.broadcast.to(user.room).emit('clear'))
+        socket.on('undo', () => socket.broadcast.to(user.room).emit('undo'))
+        socket.on('setColor', (c) => socket.broadcast.to(user.room).emit('setColor', c))
     });
     
 
@@ -61,8 +81,12 @@ io.on('connection', socket => {
     // Video chat
     socket.on('video-chat', (roomId, userId)=>{
         socket.join(roomId);
-        socket.broadcast.to(roomId).emit("user-connected", userId);
+        io.to(roomId).emit("user-connected", userId);
+        //socket.broadcast.to(roomId).emit("user-connected", userId);
     })
+
+    
+   
     
 
     // Charger quand le client se déconnecte
